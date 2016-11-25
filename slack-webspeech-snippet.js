@@ -1,7 +1,10 @@
+slack_webspeech_lang = null;
+if (0) slack_webspeech_lang = 'sr-SP';
+
 var recognition = new webkitSpeechRecognition();
 recognition.continuous = true;
 recognition.interimResults = true;
-if (0) recognition.lang = 'sr-SP'; // change language
+if (slack_webspeech_lang) recognition.lang = slack_webspeech_lang;
 
 final_transcript = '';
 
@@ -73,7 +76,52 @@ function stop_recognition() {
     recognition.stop();
 }
 
+if (1) { // TTS
+    var voiceSynth = window.speechSynthesis;
+
+    var googleVoice = null;
+    // voices needs some time to be ready
+    voiceSynth.getVoices().forEach(function (v) {
+        console.log('searching voice:', [v.name, v.lang]);
+        if (1 && slack_webspeech_lang == null && v.name == 'Google US English') {
+            console.log('selecting voice:', [v.name, v.lang]);
+            googleVoice = v;
+        }
+    });
+
+    function speak_message(msg) {
+        console.log('speak_message:', msg);
+        if (0) return;
+        var ut = new SpeechSynthesisUtterance(msg);
+        ut.voice = googleVoice;
+        if (slack_webspeech_lang) ut.lang = slack_webspeech_lang;
+        stop_recognition();
+        ut.onend = function() {
+            start_recognition();
+        };
+        voiceSynth.speak(ut);
+    }
+
+    // find my slack username
+    my_slack_username = $('#team_header_user_name').text();
+    console.log('my_slack_username:', my_slack_username);
+
+    // monitor for new messages
+    $('#msgs_div')[0].addEventListener("DOMNodeInserted", function (ev) {
+        if (ev.target.tagName == 'TS-MESSAGE') {
+            //console.log(ev.target);
+            var el = $(ev.target);
+            var username = el.find('.message_content_header_left a').first().text();
+//             if (el.attr('data-member-id') != my_slack_id) {
+            if (username != my_slack_username) {
+                var el_body = el.find('.message_body').first();
+                var text = username + 'says, ' + el_body.text();
+                speak_message(text);
+            }
+        }
+    }, false);
+}
+
 if (1) { start_recognition(); }
 
 true
-
