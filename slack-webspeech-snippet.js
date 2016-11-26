@@ -27,6 +27,7 @@ recognition.onresult = function(event) {
     for (var i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
             final_transcript += event.results[i][0].transcript;
+            lasttime = time();
         } else {
             interim_transcript += event.results[i][0].transcript;
         }
@@ -54,9 +55,10 @@ recognition.onend = function() {
     }
 }
 
+function time() { return (new Date()).getTime(); }
+lasttime = time();
+
 if (1) {
-    function time() { return (new Date()).getTime(); }
-    lasttime = time();
     setInterval(function () {
         var t = time();
         if (t - lasttime > 3000) {
@@ -125,3 +127,4 @@ if (1) { // TTS
 if (1) { start_recognition(); }
 
 true
+

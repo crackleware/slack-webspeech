@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slack-Webspeech Options</title>
+  <style>
+    div { margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <div>
+    <div>Language: <input type="text" id="lang" value="en-US"></div>
+    <div><input type="checkbox" id="enableTTS">Enable Text-To-Speech</div>
+    <div>Voice name: <input type="text" id="voiceName" value="Google US English"></div>
+  </div>
+
+  <div>
+    <button id="save">Save</button>
+  </div>
+
+  <div id="status"></div>
+
+  <script src="options.js"></script>
+
+</body>
+</html>
