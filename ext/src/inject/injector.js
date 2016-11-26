@@ -3,7 +3,6 @@ chrome.extension.sendMessage({}, function(response) {
 	    if (document.readyState === "complete") {
 		    clearInterval(readyStateCheckInterval);
 
-            var enableTTS = false;
             chrome.storage.sync.get({
                 lang: 'en-US',
                 enableTTS: false,

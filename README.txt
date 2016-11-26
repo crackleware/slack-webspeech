@@ -1,13 +1,11 @@
+Use Chrome Extension: (preferred)
 
-
-Copy code from slack-webspeech-snippet.js into Chrome's javascript snippet and execute it on slack web page for some channel. Or put this in Tampermonkey userscript if you want recognition to start automatically.
+Open chrome://extensions/, check Developer mode, click Load unpacked extension..., select directory 'ext'.
+Click on extension's Options link if you want to change default settings. Go to Slack web page for channel or chat. (https://....slack.com/messages/...) Click on extension's button on the right of the address bar to start speech recognition and TTS (optional).
 
 OR
 
-Use Chrome Extension. It has button to start speech recognition and TTS (optional).
-
-Open chrome://extensions/, check Developer mode, click Load unpacked extension..., select directory 'ext'
-
+Copy code from slack-webspeech-snippet.js into Chrome's javascript snippet and execute it on slack web page for some channel. Or put this in Tampermonkey userscript if you want recognition to start automatically.
 
 
 TODO: chrome extension (recognition status display, start/stop button)
