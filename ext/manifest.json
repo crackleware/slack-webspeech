@@ -16,7 +16,7 @@
     "options_page": "src/options/index.html",
     "page_action": {
         "default_icon": "icons/icon19.png",
-        "default_title": "page action demo"
+        "default_title": "Toggle Slack Webspeech"
     },
     "permissions": [
         "activeTab",
