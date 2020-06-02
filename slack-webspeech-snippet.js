@@ -12,7 +12,10 @@ recognition_keep_running = true;
 
 function send_message() {
     console.log('send_message:', final_transcript);
-    $('#message-input')[0].value = final_transcript; TS.view.submit(); // slack integration
+    document.querySelector('.ql-editor').innerText = final_transcript;
+    setTimeout(() => {
+        document.querySelector('div.ql-buttons > button.c-texty_input__button--send').click();
+    }, 50);
     final_transcript = '';
 }
 
@@ -61,7 +64,7 @@ lasttime = time();
 if (1) {
     setInterval(function () {
         var t = time();
-        if (t - lasttime > 3000) {
+        if (t - lasttime > 2000) {
             lasttime = t;
             if (final_transcript) send_message();
         }
@@ -104,21 +107,33 @@ if (1) { // TTS
         voiceSynth.speak(ut);
     }
 
-    // find my slack username
-    my_slack_username = $('#team_header_user_name').text();
-    console.log('my_slack_username:', my_slack_username);
-
     // monitor for new messages
-    $('#msgs_div')[0].addEventListener("DOMNodeInserted", function (ev) {
-        if (ev.target.tagName == 'TS-MESSAGE') {
-            //console.log(ev.target);
-            var el = $(ev.target);
-            var username = el.find('.message_content_header_left a').first().text();
-//             if (el.attr('data-member-id') != my_slack_id) {
-            if (username != my_slack_username) {
-                var el_body = el.find('.message_body').first();
-                var text = username + 'says, ' + el_body.text();
-                speak_message(text);
+    var last_el_id = null;
+    var is_my_msg = true;
+    document.querySelector(".c-message_list > div.c-scrollbar__hider > div > div").addEventListener("DOMNodeInserted", function (ev) {
+        var el = ev.target;
+        if (el && el.classList.contains('c-virtual_list__item')) {
+            console.log(el);
+            console.log(el.innerText);
+            if (el.getAttribute('aria-expanded') == "false") {
+                var id = el.getAttribute('id');
+                if (id.search('x') == -1) {
+                    var el_id = parseFloat(id);
+                    if (el_id == null || (el_id != NaN && (last_el_id == null || el_id > last_el_id))) {
+                        last_el_id = el_id;
+                        var el2 = el.querySelector("div.c-message_kit__gutter__right");
+                        if (el2) {
+                            var el3 = el2.querySelector('.c-message__sender');
+                            if (el3) {
+                                is_my_msg = el3.style.color == 'rgb(223, 61, 192)';
+                            }
+                            console.log('is_my_msg:', is_my_msg);
+                            if (!is_my_msg) {
+                                speak_message(el2.innerText);
+                            }
+                        }
+                    }
+                }
             }
         }
     }, false);
